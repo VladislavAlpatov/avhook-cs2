@@ -1,0 +1,5 @@
+# Project exclude paths
+/cmake-build/
+/cmake-build/build/x64-debug/
+/cmake-build/build/x64-release/
+/out/
