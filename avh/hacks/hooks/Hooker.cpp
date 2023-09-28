@@ -8,7 +8,8 @@
 #include <sigscanner/ModuleScanner.h>
 #include <cassert>
 #include <dxgi.h>
-#include <d3d11.h>
+#include "overlay/Overlay.h"
+
 
 
 inline uintptr_t oPresent;
@@ -18,11 +19,10 @@ HRESULT __fastcall hPresent([[maybe_unused]] IDXGISwapChain* pChain,
                             [[maybe_unused]] UINT SyncInterval,
                             [[maybe_unused]] UINT Flags)
 {
-    static ID3D11Device* pDevice = nullptr;
+    static overlay::Overlay overlay(pChain);
 
-    if (!pDevice) pChain->GetDevice(__uuidof(ID3D11Device), (PVOID*)&pDevice);
-
-    MessageBoxA(0, "Hooked D3D11", "Alert", MB_OK);
+    overlay.Render();
+    // MessageBoxA(0, "Hooked D3D11", "Alert", MB_OK);
 
     typedef HRESULT(__fastcall* tPresent)(IDXGISwapChain*, UINT, UINT);
     return reinterpret_cast<tPresent>(oPresent)(pChain, SyncInterval, Flags);
