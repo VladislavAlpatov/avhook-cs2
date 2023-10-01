@@ -4,9 +4,14 @@
   <component name="CidrRootsConfiguration">
     <sourceRoots>
       <file path="$PROJECT_DIR$/avh" />
+      <file path="$PROJECT_DIR$/avh/hacks" />
+      <file path="$PROJECT_DIR$/avh/overlay" />
       <file path="$PROJECT_DIR$/extlibs" />
       <file path="$PROJECT_DIR$/libs" />
     </sourceRoots>
+    <libraryRoots>
+      <file path="$PROJECT_DIR$/extlibs/imgui" />
+    </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/cmake-build" />
       <file path="$PROJECT_DIR$/out" />

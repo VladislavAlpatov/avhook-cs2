@@ -8,7 +8,6 @@
 
 namespace signature_scanner
 {
-
     class ModuleScanner final : public SignatureScanner
     {
     public:

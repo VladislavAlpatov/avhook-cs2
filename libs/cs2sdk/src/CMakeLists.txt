@@ -1,0 +1,1 @@
+target_sources(cs2sdk PRIVATE Player.cpp)
