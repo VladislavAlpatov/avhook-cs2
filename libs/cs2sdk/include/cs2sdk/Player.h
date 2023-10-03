@@ -9,12 +9,17 @@
 
 #include "BaseObject.h"
 
+namespace math
+{
+    class ImVec3;
+}
 namespace cs2_sdk
 {
     class Player : public BaseObject
     {
     public:
         [[nodiscard]] int GetHealth() const;
+        [[nodiscard]] math::ImVec3 GetOrigin() const;
     };
 
 } // cs2_sdk

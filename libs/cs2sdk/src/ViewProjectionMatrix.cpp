@@ -27,12 +27,14 @@ namespace cs2_sdk
     {
         auto projected = (*this * worldPosition).transpose();
 
+        if (projected.at(0,3) <= 0.f)
+            return std::nullopt;
+
         projected /= projected.at(0, 3);
+
 
         const auto out = projected * matrix::to_screen_matrix(screenSize.x, screenSize.y);
 
-        if (out.at(0,2) <= 0.f)
-            return std::nullopt;
 
         return math::ImVec3(out.at(0,0), out.at(0, 1), out.at(0,2));
     }

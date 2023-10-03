@@ -5,6 +5,9 @@
 #include <D3D11.h>
 #include "Overlay.h"
 
+#include <cs2sdk/EntityList.h>
+#include <cs2sdk/Player.h>
+
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_win32.h>
@@ -63,11 +66,17 @@ namespace overlay
         {
             const auto vpm = cs2_sdk::ViewProjectionMatrix::Get();
 
-            auto pos = vpm.WorldToScreen({}, ImGui::GetMainViewport()->Size);
+            static auto list = cs2_sdk::EntityList::Get();
+            for (const auto player : list->GetPlayers())
+            {
 
-            if (pos)
-                ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), "projected");
+                auto pos = vpm.WorldToScreen(player->GetOrigin(), ImGui::GetMainViewport()->Size);
 
+                if (pos)
+                    ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), "player");
+
+                ImGui::Text("HP: %d", player->GetHealth());
+            }
         }
         ImGui::End();
         ImGui::EndFrame();
