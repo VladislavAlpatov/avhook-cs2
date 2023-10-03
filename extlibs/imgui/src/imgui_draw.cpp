@@ -1595,6 +1595,17 @@ void ImDrawList::AddText(const ImFont* font, float font_size, const ImVec2& pos,
         clip_rect.z = ImMin(clip_rect.z, cpu_fine_clip_rect->z);
         clip_rect.w = ImMin(clip_rect.w, cpu_fine_clip_rect->w);
     }
+
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int j = -1; j <= 1; j++)
+        {
+            if (!j and !i)
+                continue;
+
+            font->RenderText(this, font_size, pos+ImVec2(i,j), ImColor(0,0,0), clip_rect, text_begin, text_end, wrap_width, cpu_fine_clip_rect != NULL);
+        }
+    }
     font->RenderText(this, font_size, pos, col, clip_rect, text_begin, text_end, wrap_width, cpu_fine_clip_rect != NULL);
 }
 

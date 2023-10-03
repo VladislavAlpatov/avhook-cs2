@@ -6,13 +6,13 @@
 #include "Overlay.h"
 
 #include <imgui/imgui.h>
-
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_win32.h>
+#include <imgui/imgui_freetype.h>
 
 
-#include <cs2sdk/EntityList.h>
-#include <cs2sdk/Player.h>
+#include <cs2sdk/ViewProjectionMatrix.h>
+
 
 
 namespace overlay
@@ -40,6 +40,15 @@ namespace overlay
 
         ImGui_ImplWin32_Init(sd.OutputWindow);
         ImGui_ImplDX11_Init(pDevice, m_pDeviceContext);
+
+
+        ImFontConfig cfg;
+        cfg.FontBuilderFlags |= ImGuiFreeTypeBuilderFlags_Monochrome | ImGuiFreeTypeBuilderFlags_MonoHinting;
+        // static ImWchar ranges[] = { 0x1, 0xFFFD, 0 };
+
+
+        io.Fonts->AddFontFromFileTTF(R"(C:\Windows\Fonts\verdanab.ttf)", 13.f, &cfg);
+
     }
 
     void Overlay::Render()
@@ -52,6 +61,12 @@ namespace overlay
                                                 "Press 'INSERT' key to open / close the menu. Use mouse to navigate in menu.");
         ImGui::Begin("AVhook");
         {
+            const auto vpm = cs2_sdk::ViewProjectionMatrix::Get();
+
+            auto pos = vpm.WorldToScreen({}, ImGui::GetMainViewport()->Size);
+
+            if (pos)
+                ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), "projected");
 
         }
         ImGui::End();
