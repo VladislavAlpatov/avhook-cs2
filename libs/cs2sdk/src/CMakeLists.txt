@@ -1,1 +1,1 @@
-target_sources(cs2sdk PRIVATE Player.cpp)
+target_sources(cs2sdk PRIVATE Player.cpp EntityList.cpp)

@@ -11,6 +11,10 @@
 #include <imgui/imgui_impl_win32.h>
 
 
+#include <cs2sdk/EntityList.h>
+#include <cs2sdk/Player.h>
+
+
 namespace overlay
 {
     Overlay::Overlay(IDXGISwapChain *pChain)
@@ -32,9 +36,9 @@ namespace overlay
         ImGui::CreateContext();
         ImGuiIO& io     = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        auto  window    = sd.OutputWindow;
         pDevice->GetImmediateContext(&m_pDeviceContext);
-        ImGui_ImplWin32_Init(window);
+
+        ImGui_ImplWin32_Init(sd.OutputWindow);
         ImGui_ImplDX11_Init(pDevice, m_pDeviceContext);
     }
 
@@ -44,16 +48,25 @@ namespace overlay
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Super cool cheat menu");
+        ImGui::GetForegroundDrawList()->AddText(ImVec2(), ImColor(255, 0, 0),
+                                                "Press 'INSERT' key to open / close the menu. Use mouse to navigate in menu.");
+        ImGui::Begin("AVhook");
         {
-            ImGui::TextColored(ImColor(255, 77, 77),"Some colored text!");
-            ImGui::End();
+
         }
-
-
+        ImGui::End();
         ImGui::EndFrame();
         ImGui::Render();
         m_pDeviceContext->OMSetRenderTargets(1, &m_pMainView, nullptr);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    Overlay::~Overlay()
+    {
+        ImGui_ImplDX11_Shutdown();
+        ImGui_ImplWin32_Shutdown();
+        ImGui::DestroyContext();
+
+        m_pMainView->Release();
     }
 } // overlay

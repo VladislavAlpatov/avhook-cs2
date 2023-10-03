@@ -31,6 +31,9 @@ target_link_libraries(avhook PRIVATE minhook::minhook)
 target_include_directories(avhook PRIVATE "libs/sigscanner/include")
 target_link_libraries(avhook PRIVATE sig_scanner)
 
+target_include_directories(avhook PRIVATE "libs/cs2sdk/include")
+target_link_libraries(avhook PRIVATE cs2sdk)
+
 target_include_directories(avhook PRIVATE "extlibs/imgui/include" "avh")
 target_link_libraries(avhook PRIVATE imgui)
 

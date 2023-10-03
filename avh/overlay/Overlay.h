@@ -15,7 +15,8 @@ namespace overlay
     class Overlay
     {
     public:
-        Overlay(IDXGISwapChain* pChain);
+        explicit Overlay(IDXGISwapChain* pChain);
+        ~Overlay();
         void Render();
     private:
         ID3D11DeviceContext* m_pDeviceContext = nullptr;

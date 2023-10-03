@@ -3,19 +3,29 @@
 //
 
 #pragma once
+
 #include <vector>
+#include <optional>
+#include <memory>
+
+#include "cs2sdk/BaseObject.h"
 
 
-
-namespace cs2sdk
+namespace cs2_sdk
 {
     class Player;
 
 
-    class EntityList
+    class EntityList final : BaseObject
     {
     public:
+
+        static std::shared_ptr<EntityList> Get();
+
+
         [[nodiscard]] std::vector<Player*> GetPlayers() const;
+        [[nodiscard]] std::optional<Player*> GetPlayerByIndex(int index) const;
+
     };
 
 } // cs2sdk

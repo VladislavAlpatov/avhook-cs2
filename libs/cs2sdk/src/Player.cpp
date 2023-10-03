@@ -8,7 +8,7 @@ namespace cs2_sdk
 {
     namespace
     {
-        constexpr std::ptrdiff_t offsetHealth = 0x32C;
+        constexpr std::ptrdiff_t offsetHealth = 0x808;
     }
 
 

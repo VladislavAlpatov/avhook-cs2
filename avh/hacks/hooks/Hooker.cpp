@@ -9,11 +9,12 @@
 #include <cassert>
 #include <dxgi.h>
 #include "overlay/Overlay.h"
+#include <imgui/imgui.h>
 
 
 
 inline uintptr_t oPresent;
-
+inline uintptr_t oWndProc;
 
 HRESULT __fastcall hPresent([[maybe_unused]] IDXGISwapChain* pChain,
                             [[maybe_unused]] UINT SyncInterval,
@@ -22,10 +23,20 @@ HRESULT __fastcall hPresent([[maybe_unused]] IDXGISwapChain* pChain,
     static overlay::Overlay overlay(pChain);
 
     overlay.Render();
-    // MessageBoxA(0, "Hooked D3D11", "Alert", MB_OK);
+
 
     typedef HRESULT(__fastcall* tPresent)(IDXGISwapChain*, UINT, UINT);
     return reinterpret_cast<tPresent>(oPresent)(pChain, SyncInterval, Flags);
+}
+LRESULT CALLBACK hWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    if (ImGui::GetCurrentContext())
+        ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+
+
+    return CallWindowProcW((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
 namespace hacks::hooks
@@ -48,12 +59,16 @@ namespace hacks::hooks
 
         MH_CreateHook((void*)swapChainPresentFunction.value(), hPresent, (LPVOID*)&oPresent);
         MH_EnableHook((void*)swapChainPresentFunction.value());
-
+        oWndProc = (uintptr_t)(SetWindowLongPtr(FindWindowA(nullptr, "Counter-Strike 2"),
+                                                GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hWndProc)));
     }
 
     void Hooker::Detach()
     {
+        SetWindowLongPtr(FindWindowA(nullptr, "Counter-Strike 2"),
+                         GWLP_WNDPROC, (LONG_PTR)(oWndProc));
 
+        MH_DisableHook(MH_ALL_HOOKS);
     }
 
     Hooker::~Hooker()
