@@ -9,8 +9,10 @@ namespace cs2_sdk
 {
     namespace
     {
-        constexpr std::ptrdiff_t offsetHealth = 0x808;
-        constexpr std::ptrdiff_t offsetOrigin = 0x12AC;
+        constexpr std::ptrdiff_t offsetHealth = 0x32C;
+        constexpr std::ptrdiff_t offsetOrigin = 0xCD8;
+        constexpr std::ptrdiff_t offsetFlags  = 0x3C8;
+        constexpr std::ptrdiff_t offsetViewAngles  = 0x1158;
     }
 
 
@@ -23,4 +25,15 @@ namespace cs2_sdk
     {
         return GetByOffset<math::ImVec3>(offsetOrigin);
     }
+
+    uint32_t Player::GetFlags() const
+    {
+        return GetByOffset<uint32_t>(offsetFlags);
+    }
+
+    math::ImVec3 Player::GetViewAngles() const
+    {
+        return GetByOffset<math::ImVec3>(offsetViewAngles);
+    }
+
 } // cs2_sdk

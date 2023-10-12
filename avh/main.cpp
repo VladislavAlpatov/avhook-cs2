@@ -1,6 +1,5 @@
 #include <Windows.h>
 #include "hacks/hooks/Hooker.h"
-#include <thread>
 
 void Main(HMODULE hmodule)
 {
@@ -15,11 +14,18 @@ void Main(HMODULE hmodule)
     FreeLibraryAndExitThread(hmodule, 0);
 }
 
-[[maybe_unused]] BOOL WINAPI DllMain([[maybe_unused]] const HMODULE hModule, const DWORD dwReason,[[maybe_unused]] LPVOID lpReserved)
+[[maybe_unused]] BOOL WINAPI DllMain([[maybe_unused]] const HMODULE hModule,
+                                     const DWORD dwReason,
+                                     [[maybe_unused]] LPVOID lpReserved)
 {
 
     if (dwReason == DLL_PROCESS_ATTACH)
-        CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Main, hModule, 0, nullptr);
+        CreateThread(nullptr,
+                     0,
+                     reinterpret_cast<LPTHREAD_START_ROUTINE>(Main),
+                     hModule,
+                     0,
+                     nullptr);
 
     return TRUE;
 }

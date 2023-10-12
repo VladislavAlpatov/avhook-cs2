@@ -20,6 +20,8 @@ namespace cs2_sdk
     public:
         [[nodiscard]] int GetHealth() const;
         [[nodiscard]] math::ImVec3 GetOrigin() const;
+        [[nodiscard]] uint32_t GetFlags() const;
+        [[nodiscard]] math::ImVec3 GetViewAngles() const;
     };
 
 } // cs2_sdk

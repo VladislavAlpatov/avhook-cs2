@@ -14,29 +14,25 @@ namespace cs2_sdk
     {
 
     }
-    std::optional<Player *> EntityList::GetPlayerByIndex(int index) const
+    std::optional<Player*> EntityList::GetPlayerByIndex(int index) const
     {
-        const auto listEntry = GetByOffset<uintptr_t>((8 * (index & 0x7FFF) >> 9) + 16);
 
-        if (!listEntry)
+        const auto pPlayer = *(Player**)((uintptr_t) this + index * 0x10);
+
+        if (!pPlayer)
             return std::nullopt;
 
-
-        auto* player = *(Player**)(listEntry + 120 * (index & 0x1FF));
-
-        if (!player)
-            return std::nullopt;
-
-        return player;
+        return pPlayer;
     }
 
     std::shared_ptr<EntityList> EntityList::Get()
     {
-        static const auto patternAddr = signature_scanner::ModuleScanner("client.dll").FindPattern("48 8B 0D ? ? ? ? 8B F3");
-        static const auto localOffset = *(uint32_t*)(patternAddr.value() + 3);
+        static const auto patternAddr =
+                signature_scanner::ModuleScanner("client.dll").FindPattern("8B 0D ? ? ? ? 4C 8B F0 44 0F 28 9C 24 F0 04 00 00 ");
+        static const auto localOffset = *(uint32_t*)(patternAddr.value() + 2);
 
 
-        static auto ptr = std::shared_ptr<EntityList>(*(EntityList**)(patternAddr.value()+localOffset+7),
+        static auto ptr = std::shared_ptr<EntityList>((EntityList*)(patternAddr.value()+localOffset+6+0x10),
                                                       []([[maybe_unused]] EntityList* p){});
 
 
@@ -48,7 +44,7 @@ namespace cs2_sdk
         std::vector<Player*> players;
         players.reserve(32);
 
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 16; i++)
         {
             const auto player = GetPlayerByIndex(i);
 
