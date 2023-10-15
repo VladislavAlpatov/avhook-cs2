@@ -2,7 +2,6 @@
 // Created by Vlad on 29.09.2023.
 //
 
-#include <D3D11.h>
 #include "Overlay.h"
 
 #include <cs2sdk/EntityList.h>
@@ -16,6 +15,7 @@
 
 #include <cs2sdk/ViewProjectionMatrix.h>
 
+#include <d3d11.h>
 
 
 namespace overlay

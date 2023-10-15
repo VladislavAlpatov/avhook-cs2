@@ -4,8 +4,6 @@
 
 #include "SignatureScanner.h"
 
-#include <sstream>
-
 namespace signature_scanner
 {
     std::vector<uint8_t> SignatureScanner::ParseSignatureString(const std::string &pattern)

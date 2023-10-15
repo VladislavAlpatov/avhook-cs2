@@ -30,11 +30,6 @@ add_subdirectory(avh)
 find_package(minhook CONFIG REQUIRED)
 target_link_libraries(avhook PRIVATE minhook::minhook)
 
-target_link_directories(avhook PRIVATE "$ENV{DXSDK_DIR}Lib/x64")
-target_include_directories(avhook PRIVATE  "$ENV{DXSDK_DIR}Include")
-target_link_libraries(avhook PRIVATE d3d11 d3dx11)
-
-
 target_include_directories(avhook PRIVATE "libs/sigscanner/include")
 target_link_libraries(avhook PRIVATE sig_scanner)
 
