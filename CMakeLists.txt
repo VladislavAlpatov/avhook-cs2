@@ -21,7 +21,8 @@ add_compile_definitions(WIN32_LEAN_AND_MEAN)
 add_library(avhook MODULE avh/main.cpp)
 
 target_compile_definitions(avhook PRIVATE UNICODE)
-target_compile_options(avhook PRIVATE /utf-8)
+target_compile_options(avhook PRIVATE /utf-8 /W4 /WX)
+
 add_subdirectory(extlibs)
 add_subdirectory(libs)
 add_subdirectory(avh)
