@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_TOOLCHAIN_FILE "C:/Users/Vlad/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../../../out/${CMAKE_BUILD_TYPE}")
@@ -19,6 +20,8 @@ add_compile_definitions(WIN32_LEAN_AND_MEAN)
 
 add_library(avhook MODULE avh/main.cpp)
 
+target_compile_definitions(avhook PRIVATE UNICODE)
+target_compile_options(avhook PRIVATE /utf-8)
 add_subdirectory(extlibs)
 add_subdirectory(libs)
 add_subdirectory(avh)
@@ -26,6 +29,10 @@ add_subdirectory(avh)
 
 find_package(minhook CONFIG REQUIRED)
 target_link_libraries(avhook PRIVATE minhook::minhook)
+
+target_link_directories(avhook PRIVATE "$ENV{DXSDK_DIR}Lib/x64")
+target_include_directories(avhook PRIVATE  "$ENV{DXSDK_DIR}Include")
+target_link_libraries(avhook PRIVATE d3d11 d3dx11)
 
 
 target_include_directories(avhook PRIVATE "libs/sigscanner/include")
@@ -37,8 +44,4 @@ target_link_libraries(avhook PRIVATE cs2sdk)
 target_include_directories(avhook PRIVATE "extlibs/imgui/include" "avh")
 target_link_libraries(avhook PRIVATE imgui)
 
-message(STATUS "Direct3D 11 SDK path: '$ENV{DXSDK_DIR}'")
 
-
-link_directories("$ENV{DXSDK_DIR}Lib/x64")
-include_directories("$ENV{DXSDK_DIR}Include")

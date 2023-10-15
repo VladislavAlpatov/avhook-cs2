@@ -50,7 +50,7 @@ namespace overlay
         // static ImWchar ranges[] = { 0x1, 0xFFFD, 0 };
 
 
-        io.Fonts->AddFontFromFileTTF(R"(C:\Windows\Fonts\verdanab.ttf)", 13.f, &cfg);
+        io.Fonts->AddFontFromFileTTF(R"(C:\Windows\Fonts\verdanab.ttf)", 13.f, &cfg, io.Fonts->GetGlyphRangesCyrillic());
 
     }
 
@@ -73,7 +73,7 @@ namespace overlay
                 auto pos = vpm.WorldToScreen(player->GetOrigin(), ImGui::GetMainViewport()->Size);
 
                 if (pos)
-                    ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), "player");
+                    ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), (const char*)u8"игрок");
 
                 ImGui::Text("HP: %d", player->GetHealth());
             }

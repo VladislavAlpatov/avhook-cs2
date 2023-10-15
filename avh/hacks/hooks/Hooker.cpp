@@ -7,7 +7,6 @@
 #include <MinHook.h>
 #include <sigscanner/ModuleScanner.h>
 #include <cassert>
-#include <dxgi.h>
 #include "overlay/Overlay.h"
 #include <imgui/imgui.h>
 
@@ -34,7 +33,6 @@ LRESULT CALLBACK hWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
     if (ImGui::GetCurrentContext())
         ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
-
 
     return CallWindowProcW((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 }
