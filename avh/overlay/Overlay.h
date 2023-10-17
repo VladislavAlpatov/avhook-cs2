@@ -18,6 +18,8 @@ namespace overlay
         explicit Overlay(IDXGISwapChain* pChain);
         ~Overlay();
         void Render();
+        bool m_show = false;
+
     private:
         ID3D11DeviceContext* m_pDeviceContext = nullptr;
         ID3D11RenderTargetView* m_pMainView;

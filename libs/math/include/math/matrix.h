@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "math/ImVec3.h"
+#include <memory>
+
 namespace math
 {
     class matrix
@@ -63,10 +65,8 @@ namespace math
         ~matrix();
 
     private:
-        static float **Allocate2DArray(size_t i, size_t j);
-
-        size_t m_iRows = 0;
-        size_t m_iColumns = 0;
-        float **m_ppData = nullptr;
+        size_t m_rows = 0;
+        size_t m_columns = 0;
+        std::unique_ptr<float[]> m_pData = nullptr;
     };
 }

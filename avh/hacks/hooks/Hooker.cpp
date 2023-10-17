@@ -9,19 +9,24 @@
 #include <cassert>
 #include "overlay/Overlay.h"
 #include <imgui/imgui.h>
+#include <winuser.h>
 
 
 
 inline uintptr_t oPresent;
 inline uintptr_t oWndProc;
+inline uintptr_t oShowCursor;
+
+std::unique_ptr<overlay::Overlay> pOverlay;
 
 HRESULT __fastcall hPresent([[maybe_unused]] IDXGISwapChain* pChain,
                             [[maybe_unused]] UINT SyncInterval,
                             [[maybe_unused]] UINT Flags)
 {
-    static overlay::Overlay overlay(pChain);
+    if (!pOverlay)
+        pOverlay = std::make_unique<overlay::Overlay>(pChain);
 
-    overlay.Render();
+    pOverlay->Render();
 
 
     typedef HRESULT(__fastcall* tPresent)(IDXGISwapChain*, UINT, UINT);
@@ -31,12 +36,32 @@ LRESULT CALLBACK hWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 {
     extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    if (ImGui::GetCurrentContext())
-        ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+    if (!ImGui::GetCurrentContext())
+        return CallWindowProcW((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 
+    switch (uMsg)
+    {
+        case WM_KEYDOWN:
+            if (wParam == VK_INSERT and !(lParam & (1 << 30)))
+                pOverlay->m_show = !pOverlay->m_show;
+            break;
+    }
+
+    if (pOverlay->m_show)
+    {
+        ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+        return TRUE;
+    }
+    
     return CallWindowProcW((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
+
 }
 
+int WINAPI hSetCursorPos([[maybe_unused]] _In_ int X,
+                         [[maybe_unused]] _In_ int Y)
+{
+    return TRUE;
+}
 namespace hacks::hooks
 {
 
@@ -56,7 +81,8 @@ namespace hacks::hooks
         assert(swapChainPresentFunction.has_value());
 
         MH_CreateHook((void*)swapChainPresentFunction.value(), hPresent, (LPVOID*)&oPresent);
-        MH_EnableHook((void*)swapChainPresentFunction.value());
+        MH_CreateHook((void*)hSetCursorPos, hSetCursorPos, (LPVOID*)&oShowCursor);
+        MH_EnableHook(MH_ALL_HOOKS);
         oWndProc = (uintptr_t)(SetWindowLongPtr(FindWindowA(nullptr, "Counter-Strike 2"),
                                                 GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hWndProc)));
     }

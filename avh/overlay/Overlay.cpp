@@ -12,10 +12,10 @@
 #include <imgui/imgui_impl_win32.h>
 #include <imgui/imgui_freetype.h>
 
-
 #include <cs2sdk/ViewProjectionMatrix.h>
 
 #include <d3d11.h>
+
 
 
 namespace overlay
@@ -61,24 +61,31 @@ namespace overlay
         ImGui::NewFrame();
 
         ImGui::GetForegroundDrawList()->AddText(ImVec2(), ImColor(255, 0, 0),
-                                                "Press 'INSERT' key to open / close the menu. Use mouse to navigate in menu.");
-        ImGui::Begin("AVhook");
+                                                "Press 'INSERT' key to open / close the menu."
+                                                " Use mouse to navigate in menu.");
+        if (m_show)
         {
-            const auto vpm = cs2_sdk::ViewProjectionMatrix::Get();
-
-            static auto list = cs2_sdk::EntityList::Get();
-            for (const auto player : list->GetPlayers())
+            ImGui::Begin("AVhook");
             {
+                const auto vpm = cs2_sdk::ViewProjectionMatrix::Get();
 
-                auto pos = vpm.WorldToScreen(player->GetOrigin(), ImGui::GetMainViewport()->Size);
+                static auto list = cs2_sdk::EntityList::Get();
+                for (const auto player: list->GetPlayers())
+                {
 
-                if (pos)
-                    ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255), (const char*)u8"игрок");
+                    auto pos = vpm.WorldToScreen(player->GetOrigin(),
+                                                 ImGui::GetMainViewport()->Size);
 
-                ImGui::Text("HP: %d", player->GetHealth());
+                    if (pos)
+                        ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255),
+                                                                (const char *) u8"игрок");
+
+                    ImGui::Text("HP: %d", player->GetHealth());
+                }
+                ImGui::End();
             }
         }
-        ImGui::End();
+
         ImGui::EndFrame();
         ImGui::Render();
         m_pDeviceContext->OMSetRenderTargets(1, &m_pMainView, nullptr);

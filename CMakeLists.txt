@@ -40,4 +40,5 @@ target_link_libraries(avhook PRIVATE cs2sdk)
 target_include_directories(avhook PRIVATE "extlibs/imgui/include" "avh")
 target_link_libraries(avhook PRIVATE imgui)
 
-
+find_package(Boost REQUIRED)
+target_link_libraries(avhook PRIVATE ${Boost_LIBRARIES})
