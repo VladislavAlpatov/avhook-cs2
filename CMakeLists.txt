@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.26)
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_TOOLCHAIN_FILE "C:/Users/Vlad/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../../../out/${CMAKE_BUILD_TYPE}")
 set(CMAKE_PDB_OUTPUT_DIRECTORY "../../../out/${CMAKE_BUILD_TYPE}")
-set(VCPKG_TARGET_TRIPLET "x64-windows-static")
-
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
