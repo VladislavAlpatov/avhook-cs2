@@ -28,9 +28,14 @@ namespace overlay
         pChain->GetDevice(__uuidof(ID3D11Device), (PVOID*)&pDevice);
 
         ID3D11Texture2D* pBackBuffer;
-        // D3DX11CreateTextureFromMemory(pDevice, RawData::AVhookLogoData, sizeof(RawData::AVhookLogoData), &m_pTexureCheatLogo);
         pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-        pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pMainView);
+
+        D3D11_RENDER_TARGET_VIEW_DESC rtv_desc = {};
+        rtv_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+
+        pDevice->CreateRenderTargetView(pBackBuffer, &rtv_desc, &m_pMainView);
+
         pBackBuffer->Release();
 
         DXGI_SWAP_CHAIN_DESC sd;
@@ -47,9 +52,6 @@ namespace overlay
 
         ImFontConfig cfg;
         cfg.FontBuilderFlags |= ImGuiFreeTypeBuilderFlags_Monochrome | ImGuiFreeTypeBuilderFlags_MonoHinting;
-        // static ImWchar ranges[] = { 0x1, 0xFFFD, 0 };
-
-
         io.Fonts->AddFontFromFileTTF(R"(C:\Windows\Fonts\verdanab.ttf)", 13.f, &cfg, io.Fonts->GetGlyphRangesCyrillic());
 
     }
@@ -65,23 +67,9 @@ namespace overlay
                                                 " Use mouse to navigate in menu.");
         if (m_show)
         {
-            ImGui::Begin("AVhook");
+            ImGui::Begin("Example window");
             {
-                const auto vpm = cs2_sdk::ViewProjectionMatrix::Get();
 
-                static auto list = cs2_sdk::EntityList::Get();
-                for (const auto player: list->GetPlayers())
-                {
-
-                    auto pos = vpm.WorldToScreen(player->GetOrigin(),
-                                                 ImGui::GetMainViewport()->Size);
-
-                    if (pos)
-                        ImGui::GetForegroundDrawList()->AddText(pos.value(), ImColor(255, 255, 255),
-                                                                (const char *) u8"игрок");
-
-                    ImGui::Text("HP: %d", player->GetHealth());
-                }
                 ImGui::End();
             }
         }

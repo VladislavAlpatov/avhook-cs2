@@ -76,11 +76,9 @@ namespace hacks::hooks
     {
         const auto dxgiScanner = signature_scanner::ModuleScanner("dxgi.dll");
 
-        const auto swapChainPresentFunction = dxgiScanner.FindPattern("? ? ? ? ? 48 89 74 24 ? 55 57 41 56 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 60");
+        const auto swapChainPresentFunction = reinterpret_cast<uintptr_t>(GetModuleHandleA("dxgi.dll")) + 0x347c0;
 
-        assert(swapChainPresentFunction.has_value());
-
-        MH_CreateHook((void*)swapChainPresentFunction.value(), hPresent, (LPVOID*)&oPresent);
+        MH_CreateHook((void*)swapChainPresentFunction, hPresent, (LPVOID*)&oPresent);
         MH_CreateHook((void*)hSetCursorPos, hSetCursorPos, (LPVOID*)&oShowCursor);
         MH_EnableHook(MH_ALL_HOOKS);
         oWndProc = (uintptr_t)(SetWindowLongPtr(FindWindowA(nullptr, "Counter-Strike 2"),
